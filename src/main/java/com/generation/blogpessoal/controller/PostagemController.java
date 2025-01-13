@@ -45,13 +45,17 @@ public class PostagemController {
     
     @GetMapping("/titulo/{titulo}")
     public ResponseEntity<List<Postagem>> getByTitulo(@PathVariable String titulo){
-    	return ResponseEntity.ok(postagemRepository.findAllByTituloContainingIgnoreCase(titulo));
+    	return ResponseEntity.ok(postagemRepository.findAllByTituloContainingIgnoreCase(titulo)); 
+    	// findAllByTituloContainingIgnoreCase = "find" = select, "all" = *, "By" = where, "titulo" = Atributo da classe, "Containing" = LIKE "%titulo%", "IgnoreCase" = Ignorando letras maiúsculas ou minúsculas, "@Param("titulo")" = Define a variável String titulo como um parâmetro da consulta. Esta anotação é obrigatório em consultas do tipo Like, "String titulo" = Parâmetro do Método contendo o título que você deseja procurar.
     }
     
     @PostMapping
     public ResponseEntity<Postagem> post(@Valid @RequestBody Postagem postagem){
     	return ResponseEntity.status(HttpStatus.CREATED)
     			.body(postagemRepository.save(postagem));
+    	// @Valid = Esta anotação valida o Objeto Postagem enviado no Corpo da Requisição (Request Body), conforme as regras definidas na Model Postagem (@NotNull, @NotBlank
+    	//@RequestBody Postagem postagem =  Esta anotação recebe o Objeto do tipo Postagem, que foi enviado no Corpo da Requisição (Request Body), no formato JSON e insere no parâmetro postagem do Método post.
+    //return ResponseEntity.status(HttpStatus.CREATED).body(postagemRepository.save(postagem)) = Executa o Método padrão da Interface JpaRepository save(postagem), responsável por persistir (salvar) um Objeto no Banco de dados e retorna o HTTP Status CREATED🡪201 se o Objeto foi persistido no Banco de dados.
     }
     
     @PutMapping
@@ -60,6 +64,7 @@ public class PostagemController {
     			.map(resposta -> ResponseEntity.status(HttpStatus.OK)
     					.body(postagemRepository.save(postagem)))
     			.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    // .map(resposta 🡪 ResponseEntity.status(HttpStatus.OK).body(postagemRepository.save(postagem) = Se o Objeto da Classe Postagem for encontrado, o Método map (Optional), mapeia no Objeto resposta o retorno do Método findById(id), mas ao invés de exibir o Objeto resposta no Corpo da Resposta, vamos executar o Método postagemRepository.save(postagem), que substituirá o Objeto da Classe Postagem encontrado no Banco de dados, pelo Objeto postagem recebido no Corpo da Requisição	
     }
     
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -71,5 +76,8 @@ public class PostagemController {
     		throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     	
     	postagemRepository.deleteById(id);
+    	
+    	// @ResponseStatus = indica que o Método delete(Long id), terá um Status HTTP específico quando a Requisição for bem sucedida, ou seja, será retornado o HTTP Status NO_CONTENT 🡪 204, ao invés do HTTP Status OK 🡪 200 como resposta padrão do Método.
+    	// @PathVariable Long id: = Esta anotação insere o valor enviado no endereço do endpoint, na Variável de Caminho {id}, no parâmetro do Método delete( Long id );
     }
 }
