@@ -20,6 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.generation.blogpessoal.model.Postagem;
 import com.generation.blogpessoal.repository.PostagemRepository;
+import com.generation.blogpessoal.repository.TemaRepository;
 
 import jakarta.validation.Valid;
 
@@ -30,6 +31,9 @@ public class PostagemController {
 
     @Autowired // O spring dá autonomia para a Interface poder invocar os memtodos
     private PostagemRepository postagemRepository;
+    
+    @Autowired
+    private TemaRepository temaRepository;
 
     @GetMapping // Indica que esse método é chamado em Verbos/Metodos http do tipo get
     public ResponseEntity<List<Postagem>> getAll (){
@@ -51,8 +55,11 @@ public class PostagemController {
     
     @PostMapping
     public ResponseEntity<Postagem> post(@Valid @RequestBody Postagem postagem){
-    	return ResponseEntity.status(HttpStatus.CREATED)
+    	if (temaRepository.existsById(postagem.getTema().getId()))
+    		return ResponseEntity.status(HttpStatus.CREATED)
     			.body(postagemRepository.save(postagem));
+    	
+    	throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tema não existe!", null);
     	//@RequestBody, a informação esta vindo do corpo da json, vamos escrever os campos e atualizalos, ele vai salvar e retornar com os valores salvos.
     	// @Valid = Esta anotação valida o Objeto Postagem enviado no Corpo da Requisição (Request Body), conforme as regras definidas na Model Postagem (@NotNull, @NotBlank
     	//@RequestBody Postagem postagem =  Esta anotação recebe o Objeto do tipo Postagem, que foi enviado no Corpo da Requisição (Request Body), no formato JSON e insere no parâmetro postagem do Método post.
@@ -60,13 +67,19 @@ public class PostagemController {
     }
     
     @PutMapping
-    public ResponseEntity<Postagem> put(@Valid @RequestBody Postagem postagem){
-    	return postagemRepository.findById(postagem.getId())
-    			.map(resposta -> ResponseEntity.status(HttpStatus.OK)
-    					.body(postagemRepository.save(postagem)))
-    			.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-    // .map(resposta 🡪 ResponseEntity.status(HttpStatus.OK).body(postagemRepository.save(postagem) = Se o Objeto da Classe Postagem for encontrado, o Método map (Optional), mapeia no Objeto resposta o retorno do Método findById(id), mas ao invés de exibir o Objeto resposta no Corpo da Resposta, vamos executar o Método postagemRepository.save(postagem), que substituirá o Objeto da Classe Postagem encontrado no Banco de dados, pelo Objeto postagem recebido no Corpo da Requisição	
+    public ResponseEntity<Postagem> put(@Valid @RequestBody Postagem postagem) {
+        if (postagemRepository.existsById(postagem.getId())) {
+
+            if (temaRepository.existsById(postagem.getTema().getId()))
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body(postagemRepository.save(postagem));
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tema não existe!", null);
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
+
     
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
