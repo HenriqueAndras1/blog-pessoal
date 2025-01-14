@@ -4,10 +4,13 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -33,6 +36,10 @@ public class Postagem {
 	@UpdateTimestamp
 	private LocalDateTime data;
 	
+	@ManyToOne // Estamos criando relacionamento entra as tabelas Postagem e tema, estamos indicando que a classe Postagem é o lado N:1 Muitos para 1
+	@JsonIgnoreProperties("postagem") //@JsonIgnoreProperties, funciona como uma excepetion em que não deixa o nosso código entrar em loop por causa da relação entre as tabelas.
+	private Tema tema;
+	
 	public Long getId() {
 		return id;
 	}
@@ -56,6 +63,12 @@ public class Postagem {
 	}
 	public void setData(LocalDateTime data) {
 		this.data = data;
+	}
+	public Tema getTema() {
+		return tema;
+	}
+	public void setTema(Tema tema) {
+		this.tema = tema;
 	}
 	
 	

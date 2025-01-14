@@ -53,6 +53,7 @@ public class PostagemController {
     public ResponseEntity<Postagem> post(@Valid @RequestBody Postagem postagem){
     	return ResponseEntity.status(HttpStatus.CREATED)
     			.body(postagemRepository.save(postagem));
+    	//@RequestBody, a informação esta vindo do corpo da json, vamos escrever os campos e atualizalos, ele vai salvar e retornar com os valores salvos.
     	// @Valid = Esta anotação valida o Objeto Postagem enviado no Corpo da Requisição (Request Body), conforme as regras definidas na Model Postagem (@NotNull, @NotBlank
     	//@RequestBody Postagem postagem =  Esta anotação recebe o Objeto do tipo Postagem, que foi enviado no Corpo da Requisição (Request Body), no formato JSON e insere no parâmetro postagem do Método post.
     //return ResponseEntity.status(HttpStatus.CREATED).body(postagemRepository.save(postagem)) = Executa o Método padrão da Interface JpaRepository save(postagem), responsável por persistir (salvar) um Objeto no Banco de dados e retorna o HTTP Status CREATED🡪201 se o Objeto foi persistido no Banco de dados.
