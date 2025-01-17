@@ -29,7 +29,7 @@ import jakarta.validation.Valid;
 @CrossOrigin(origins = "*", allowedHeaders = "*") // Libera o acesso a qualquer fronte que não seja autorizado 
 public class PostagemController {
 
-    @Autowired // O spring dá autonomia para a Interface poder invocar os memtodos
+    @Autowired // O spring dá autonomia para a Interface poder invocar os metodos
     private PostagemRepository postagemRepository;
     
     @Autowired

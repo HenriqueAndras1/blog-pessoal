@@ -40,6 +40,10 @@ public class Postagem {
 	@JsonIgnoreProperties("postagem") //@JsonIgnoreProperties, funciona como uma excepetion em que não deixa o nosso código entrar em loop por causa da relação entre as tabelas.
 	private Tema tema;
 	
+	@ManyToOne
+	@JsonIgnoreProperties("postagem")
+	private Usuario usuario;
+	
 	public Long getId() {
 		return id;
 	}
@@ -69,6 +73,12 @@ public class Postagem {
 	}
 	public void setTema(Tema tema) {
 		this.tema = tema;
+	}
+	public Usuario getUsuario() {
+		return usuario;
+	}
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
 	
 	
