@@ -16,6 +16,8 @@ import com.generation.blogpessoal.model.Usuario;
 import com.generation.blogpessoal.repository.UsuarioRepository;
 import com.generation.blogpessoal.security.JwtService;
 
+
+// classe da regra de negocio, ela ajuda o controller a funcionar com as requisições, as regras de negocio sao para determinar como vai funcionar a logica da nossa aplicação.
 @Service
 public class UsuarioService {
 

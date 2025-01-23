@@ -1,5 +1,6 @@
 package com.generation.blogpessoal.model;
 
+//classe auxiliar,DTO, servindo para encapsular na nossa tabela model usuario, trazendo somente as informações que são necessarias aquele momento para o usuario fazer o login. 
 public class UsuarioLogin {
 	
 	private Long id;
